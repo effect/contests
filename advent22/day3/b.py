@@ -15,12 +15,8 @@ for i in range(ngroups):
 	a = set(lines[3 * i])
 	b = set(lines[3 * i + 1])
 	c = set(lines[3 * i + 2])
-
-	print(a, b, c)
-
 	r = a.intersection(b).intersection(c)
 	x = r.pop()
-
 	result += priority(x)
 
 print(result)
