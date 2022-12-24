@@ -1,5 +1,6 @@
+import numpy
 import time
-TLE = 1000
+TLE = 300
 
 f = open("test.in")
 f = open("input.txt")
@@ -31,7 +32,7 @@ def parse_blueprint(line):
 
 
 visited = set()
-MAX_ORE_ROBOTS = 4
+MAX_ORE_ROBOTS = 3  # also run with 4 
 
 def sim(cost, minutes, resources, robots):
 	state = tuple([minutes] + resources + robots)
@@ -48,9 +49,9 @@ def sim(cost, minutes, resources, robots):
 		global geodes
 		if geodes < resources[-1]:
 			geodes = resources[-1]
-			print(geodes)
-			print(resources)
-			print(robots)
+			print("\t", geodes)
+			print("\t", resources)
+			print("\t", robots)
 			last_time = time.time()
 		return
 
@@ -60,39 +61,58 @@ def sim(cost, minutes, resources, robots):
 		next_resources[i] += r
 
 	
-	if robots[0] < MAX_ORE_ROBOTS:
-		order = [0, 3, 2, 1]  # try build ore robots in the beggining
-	else:
-		order = [3, 2, 1]  # try build each type of robot, start with more advanced
+	# if robots[0] < MAX_ORE_ROBOTS:
+	# 	order = [0, 3, 2, 1, 4]  # try build ore robots in the beggining
+	# 	# order = numpy.random.permutation(5)
+	# else:
+	# 	# order = [3, 2, 1]  # try build each type of robot, start with more advanced
+	# 	order = list(numpy.random.permutation(5))
+	# 	order.remove(0)
+
+	order = numpy.random.permutation(5)
+	if robots[0] >= MAX_ORE_ROBOTS:
+		order = list(order)
+		order.remove(0)
 
 	for i in order:  
-		for j, req in enumerate(cost[i]):
-			if resources[j] < req:
-				break
+		if i == 4:
+			# try without building new robots
+			sim(cost, minutes + 1, next_resources, robots)
 		else:
-			# all requirements satisfied, can build new robot of type i
-			next_robots = robots.copy()
-			next_robots[i] += 1
-
-			robot_next_resources = next_resources.copy()
 			for j, req in enumerate(cost[i]):
-				robot_next_resources[j] -= req
-			sim(cost, minutes + 1, robot_next_resources, next_robots)
+				if resources[j] < req:
+					break
+			else:
+				# all requirements satisfied, can build new robot of type i
+				next_robots = robots.copy()
+				next_robots[i] += 1
+
+				robot_next_resources = next_resources.copy()
+				for j, req in enumerate(cost[i]):
+					robot_next_resources[j] -= req
+				sim(cost, minutes + 1, robot_next_resources, next_robots)
 	
-	# try without building new robots
-	sim(cost, minutes + 1, next_resources, robots)
 
+best_geodes = [0] * 3
+# result = 1
 
-result = 1
-for index, line in enumerate(lines):
-	cost = parse_blueprint(line)
-	print(cost)
+for iteration in range(20):
+	print(f"iteration: {iteration}")
+	for index, line in enumerate(lines):
+		print(f"blueprint: {index}")
+		cost = parse_blueprint(line)
+		print(cost)
 
-	geodes = 0
-	visited = set()
-	last_time = time.time()
-	sim(cost, 1, [0] * 4, [1, 0, 0, 0])
-	print(geodes)
-	result *= geodes
+		geodes = 0
+		visited = set()
+		last_time = time.time()
+		sim(cost, 1, [0] * 4, [1, 0, 0, 0])
 
-print(result)
+		if best_geodes[index] < geodes:
+			best_geodes[index] = geodes
+			print(index, geodes)
+	print(f"iteration: {iteration}")
+	print(f"best_geodes so far: {best_geodes}")
+
+print(best_geodes)
+# print(result)
