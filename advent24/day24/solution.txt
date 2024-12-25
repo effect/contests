@@ -1,0 +1,66 @@
+Output for given input: 
+
+OK: 1 z01  =  ('mcg', 'XOR', 'vcn') no OR:  mcg  =  ('x00', 'AND', 'y00') vcn  =  ('x01', 'XOR', 'y01')
+21 z21  =  ('jsq', 'AND', 'vcj')
+22 z22  =  ('sjk', 'XOR', 'dpc') sjk  =  shh OR kcq shh  =  jsq XOR vcj kcq  =  y21 AND x21  // no 2 AND 
+26 z26  =  ('skh', 'XOR', 'vgs') no XOR:  skh  =  ('ggv', 'OR', 'thm') vgs  =  ('y26', 'AND', 'x26')
+27 z27  =  ('jgd', 'XOR', 'qcr') qcr  =  bmg OR dtk bmg  =  vgs AND skh dtk  =  y26 XOR x26  // no 2 AND 
+33 z33  =  ('mtw', 'OR', 'fdv')
+34 z34  =  ('dqr', 'XOR', 'wnt') no OR:  dqr  =  ('vkp', 'XOR', 'jqp') wnt  =  ('y34', 'XOR', 'x34')
+39 z39  =  ('x39', 'AND', 'y39')
+40 z40  =  ('jqk', 'XOR', 'vnc') jqk  =  pfw OR kdd pfw  =  gqn XOR sjq kdd  =  gqn AND sjq  // no 2 AND 
+OK: 45 z45  =  ('kbm', 'OR', 'spc')
+
+
+
+39:
+	jqk XOR vnc -> z40
+	=> jqk - перенос разряда из 39 в 40
+	pfw OR kdd -> jqk - одно из них x39 and y39
+  x39 XOR y39 -> gqn
+  gqn XOR sjq -> pfw
+  => pfw <-> z39
+
+33:
+	x33 AND y33 -> mtw
+	x33 XOR y33 -> jqp
+	mtw OR fdv -> z33
+
+	vkp XOR jqp -> dqr => try dqr <-> z33
+
+21:
+WRONG: jsq AND vcj -> z21
+
+!y20 XOR x20 -> khd
+x20 AND y20 -> ? ssw --> перенос из 20 в 21 разряд
+!khd XOR vcp -> z20  => vcp - это перенос из 19 в 20 разряд
+
+x21 XOR y21 -> jsq
+y21 AND x21 -> kcq
+
+wtw OR scf -> vcp
+
+vcp AND khd -> dsj
+ssw OR dsj -> vcj
+
+Настоящий z21= ? XOR ???
+	z21 = jsq XOR (? OR ?)
+
+	есть: jsq XOR vcj -> shh
+	  но: ssw OR dsj -> vcj
+
+22 => Сомнительно: shh  =  jsq XOR vcj
+
+
+26:
+Сомнительно: z26  =  (+'skh', 'XOR', 'vgs')  или vgs  =  ('y26', 'AND', 'x26')
+	ggv OR thm -> skh+
+	x25 AND y25 -> thm+
+	=> vgs wrong
+27: dtk ??   => dtk <-> vgs
+
+
+!!! pfw <-> z39
+!!! shh <-> z21
+!!! dqr <-> z33
+!!! dtk <-> vgs
