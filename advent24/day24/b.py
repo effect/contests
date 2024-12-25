@@ -20,52 +20,6 @@ def init():
 	return variables, expressions
 
 
-def calc(var):
-	if var in variables:
-		return variables[var]
-	(a, op, b) = expressions[var]
-	av = calc(a)
-	bv = calc(b)
-	if op == 'AND':
-		result = av and bv
-	if op == 'OR':
-		result = av or bv
-	if op == 'XOR':
-		result = av ^ bv
-	variables[var] = result
-	return result
-
-
-def get_sources(node):
-	if node[0] in ('x', 'y'):
-		return [int(node[1:])]
-	(a, op, b) = expressions[node]
-	ra = get_sources(a)
-	rb = get_sources(b)
-	return ra + rb
-
-
-def reverse_path(node):
-	if node[0] in ('x', 'y'):
-		return set([node])
-	(a, op, b) = expressions[node]
-	ra = reverse_path(a)
-	rb = reverse_path(b)
-	cur = set([node]) if node[0] != 'z' else set()
-	return cur | ra | rb
-
-
-def forward_path(node):
-	if node[0] == 'z':
-		return set([node])
-	result = set()
-	if not (node[0] in ('x', 'y')):
-		result.add(node)
-	for next in forward[node]:
-		result |= forward_path(next)
-	return result
-
-
 def var_name(xyz, index):
 	return xyz + str(index).zfill(2)
 
@@ -91,15 +45,15 @@ rev = [0] * NB
 forw = [0] * NB
 variables, expressions = init() 
 
-# to_swap = [
-# ('pfw', 'z39'), 
-# ('shh', 'z21'), 
-# ('dqr', 'z33'), 
-# ('vgs', 'dtk')
-# ]
+to_swap = [
+('pfw', 'z39'), 
+('shh', 'z21'), 
+('dqr', 'z33'), 
+('vgs', 'dtk')
+]
 
-# for a, b in to_swap:
-# 	expressions[a], expressions[b] = expressions[b], expressions[a]
+for a, b in to_swap:
+	expressions[a], expressions[b] = expressions[b], expressions[a]
 
 for ind in range(1, NB):
 	z = var_name('z', ind)
